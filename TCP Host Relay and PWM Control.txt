@@ -1,0 +1,235 @@
+import socket
+import os
+import RPi.GPIO as GPIO
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+
+GPIO.setup(40,GPIO.OUT)
+
+GPIO.setup(37,GPIO.OUT)
+GPIO.setup(38,GPIO.OUT)
+GPIO.setup(36,GPIO.OUT) #Enable 1
+
+GPIO.setup(31,GPIO.OUT)
+GPIO.setup(32,GPIO.OUT)
+GPIO.setup(35,GPIO.OUT) #Enable 2
+
+p = GPIO.PWM(36,100)
+q = GPIO.PWM(35,100)
+
+host = '192.168.1.1'
+port = 5005
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((host, port))
+s.listen(1)
+conn, addr = s.accept()
+
+f = os.popen('arp -a')
+now = f.read()
+print ("***Device connected in network***", now)
+print ("Connection from", addr)
+
+a = ['light on']
+b = ['light off']
+
+off = 0
+low = 25
+mid = 50
+max = 100
+
+while 1:
+        data = conn.recv(4096)
+	print("Recivied:"+(data))
+
+        if data in a:
+                GPIO.output(40,1)
+                response1 = 'OK'
+		conn.sendall(response1)
+
+        elif data in b:
+                GPIO.output(40,0)
+                response2 = 'OK'
+		conn.sendall(response2)
+
+	elif data == 'start motor':
+		GPIO.output(36,1)
+		GPIO.output(37,1)
+		p.start(0)
+		q.start(0)
+		response3 = 'Motors Started at 0 PWM send guide to get PWM Commands'
+		conn.sendall(response3)
+
+	elif data == 'guide':
+		response4 = 'f for forward and r for reverese, 1 for motor1 and 2 for motor2 and 0 for allmotors, set speed by low,mid,max, Eg : f1low , r2max, f0mid'
+		conn.sendall(response4)
+
+	elif data == '1off':
+		GPIO.output(37,0)
+		GPIO.output(38,0)
+		p.ChangeDutyCycle(off)
+		response5 = 'Motor 1 to 0 RPM'
+		conn.sendall(response5)
+
+	elif data == 'f1low':
+		GPIO.output(37,1)
+		GPIO.output(38,0)
+		p.ChangeDutyCycle(low)
+		response6 = 'Forward Motor 1 at Low Speed'
+		conn.sendall(response6)
+	elif data == 'f1mid':
+		GPIO.output(37,1)
+		GPIO.output(38,0)
+		p.ChangeDutyCycle(mid)
+		response7 = 'Forward Motor 1 at Medium Speed'
+		conn.sendall(response7)
+	elif data == 'f1max':
+		GPIO.output(37,1)
+		GPIO.output(38,0)
+		p.ChangeDutyCycle(max)
+		response8 = 'Forward Motor 1 at Max Speed'
+		conn.sendall(response8)
+
+	elif data == 'r1low':
+		GPIO.output(37,0)
+		GPIO.output(38,1)
+		p.ChangeDutyCycle(low)
+		response9 = 'Reverse Motor 1 at Low Speed'
+		conn.sendall(response9)
+	elif data == 'r1mid':
+		GPIO.output(37,0)
+		GPIO.output(38,1)
+		p.ChangeDutyCycle(mid)
+		response10 = 'Reverse Motor 1 at Medium Speed'
+		conn.sendall(response10)
+	elif data == 'r1max':
+		GPIO.output(37,0)
+		GPIO.output(38,1)
+		p.ChangeDutyCycle(max)
+		response11 = 'Reverse Motor 1 at Max Speed'
+		conn.sendall(response11)
+
+	elif data == '2off':
+		GPIO.output(31,0)
+		GPIO.output(32,0)
+		q.ChangeDutyCycle(off)
+		response12 = 'Motor 2 to 0 RPM'
+		conn.sendall(response12)
+	elif data == 'f2low':
+		GPIO.output(31,0)
+		GPIO.output(32,1)
+		q.ChangeDutyCycle(low)
+		response13 = 'Forward Motor 2 at Low Speed'
+		conn.sendall(response13)
+	elif data == 'f2mid':
+		GPIO.output(31,0)
+		GPIO.output(32,1)
+		q.ChangeDutyCycle(mid)
+		response14 = 'Forward Motor 2 at Medium Speed'
+		conn.sendall(response14)
+	elif data == 'f2max':
+		GPIO.output(31,0)
+		GPIO.output(32,1)
+		q.ChangeDutyCycle(max)
+		response15 = 'Forward Motor 2 at Max Speed'
+		conn.sendall(response15)
+
+	elif data == 'r2low':
+		GPIO.output(31,1)
+		GPIO.output(32,0)
+		q.ChangeDutyCycle(low)
+		response16 = 'Reverse Motor 2 at Low Speed'
+		conn.sendall(response16)
+	elif data == 'r2mid':
+		GPIO.output(31,1)
+		GPIO.output(32,0)
+		q.ChangeDutyCycle(mid)
+		response17 = 'Reverse Motor 2 at Medium Speed'
+		conn.sendall(response17)
+	elif data == 'r2max':
+		GPIO.output(31,1)
+		GPIO.output(32,0)
+		q.ChangeDutyCycle(max)
+		response18 = 'Reverse Motor 2 at Max Speed'
+		conn.sendall(response18)
+
+	elif data == '0off':
+		GPIO.output(37,0)
+		GPIO.output(38,0)
+		GPIO.output(31,0)
+		GPIO.output(32,0)
+		p.ChangeDutyCycle(off)
+		q.ChangeDutyCycle(off)
+		response19 = 'ALL Motors at 0 RPM'
+		conn.sendall(response19)
+	elif data == 'f0low':
+		GPIO.output(37,1)
+		GPIO.output(38,0)
+		GPIO.output(31,0)
+		GPIO.output(32,1)
+		p.ChangeDutyCycle(low)
+		q.ChangeDutyCycle(low)
+		response20 = 'Forward ALL Motors at Low Speed'
+		conn.sendall(response20)
+	elif data == 'f0mid':
+		GPIO.output(37,1)
+		GPIO.output(38,0)
+		GPIO.output(31,0)
+		GPIO.output(32,1)
+		p.ChangeDutyCycle(mid)
+		q.ChangeDutyCycle(mid)
+		response21 = 'Forward ALL Motors at Medium Speed'
+		conn.sendall(response21)
+	elif data == 'f0max':
+		GPIO.output(37,1)
+		GPIO.output(38,0)
+		GPIO.output(31,0)
+		GPIO.output(32,1)
+		p.ChangeDutyCycle(max)
+		q.ChangeDutyCycle(max)
+		response22 = 'Forward ALL Motors at Max Speed'
+		conn.sendall(response22)
+
+	elif data == 'r0low':
+		GPIO.output(37,0)
+		GPIO.output(38,1)
+		GPIO.output(31,1)
+		GPIO.output(32,0)
+		p.ChangeDutyCycle(low)
+		q.ChangeDutyCycle(low)
+		response23 = 'Reverse ALL Motors at Low Speed'
+		conn.sendall(response23)
+	elif data == 'r0mid':
+		GPIO.output(37,0)
+		GPIO.output(38,1)
+		GPIO.output(31,1)
+		GPIO.output(32,0)
+		p.ChangeDutyCycle(mid)
+		q.ChangeDutyCycle(mid)
+		response24 = 'Reverse ALL Motors at Medium Speed'
+		conn.sendall(response24)
+	elif data == 'r0max':
+		GPIO.output(37,0)
+		GPIO.output(38,1)
+		GPIO.output(31,1)
+		GPIO.output(32,0)
+		p.ChangeDutyCycle(max)
+		q.ChangeDutyCycle(max)
+		response25 = 'Reverse ALL Motors at Max Speed'
+		conn.sendall(response25)
+
+	elif data == 'stop motor':
+		GPIO.output(36,0)
+		GPIO.output(37,0)
+		p.stop()
+		q.stop()
+		response26 = 'Motors Stopped'
+		conn.sendall(response26)
+
+	else:
+		response = raw_input('Reply: ')
+		if response == 'exit':
+			break
+		conn.sendall(response)
+conn.close()

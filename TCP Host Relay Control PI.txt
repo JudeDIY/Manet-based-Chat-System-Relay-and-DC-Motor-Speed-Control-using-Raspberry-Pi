@@ -1,0 +1,43 @@
+import socket
+import os
+import RPi.GPIO as GPIO
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+
+GPIO.setup(40,GPIO.OUT)
+
+host = '192.168.1.1'
+port = 5005
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((host, port))
+s.listen(1)
+conn, addr = s.accept()
+
+f = os.popen('arp -a')
+now = f.read()
+print ("***Device connected in network***", now)
+print ("Connection from", addr)
+
+a = ['light on'] 
+b = ['light off']
+
+while 1:
+        data = conn.recv(1024)
+        print("Recivied:"+(data))
+
+        if data in a:
+                GPIO.output(40,1)
+                response1 = 'OK'
+		conn.sendall(response1)
+        elif data in b:
+                GPIO.output(40,0)
+                response2 = 'OK'
+		conn.sendall(response2)
+        else:
+                response = raw_input('Reply: ')
+                if response == 'exit'
+                        break
+                conn.sendall(response)	
+conn.close()
