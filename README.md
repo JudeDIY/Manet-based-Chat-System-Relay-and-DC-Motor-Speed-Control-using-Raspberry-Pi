@@ -1,4 +1,4 @@
-# Manet-based-Chat-System-Relay-and-DC-Motor-Speed-Control
+# Manet-based-Chat-System-Relay-and-DC-Motor-Speed-Control using Raspberry Pi
 This project is visioned to provide a backup radio tower when all fails during any natural disaster where it can be used to communicate with people remotely using this network.
 
 Lets get Started.
