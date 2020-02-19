@@ -9,6 +9,8 @@ light on, light off => to control the electrical device by using a 5V Relay.
 
 start motor, stop motor => To enable and disable the PWM devices at 0 Speed.
 
+1off,2off,0off => Switch the motors back to 0 Speed.
+
 f1low,f1mid,f1max => Motor 1 on forward at various speed.
 
 r1low,r1mid,r1max => Motor 1 on reverse at varoius speed.
