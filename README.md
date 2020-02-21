@@ -1,5 +1,5 @@
 # Manet-based-Chat-System-Relay-and-DC-Motor-Speed-Control using Raspberry Pi
-This project is visioned to provide a backup radio tower when all fails during any natural disaster where it can be used to communicate with people remotely using this network. Also can control various types of electrical devices by triggering them by ON and OFF and Also can control the Speed of 12V DC Motor using L239D Motor Driver we can control upto 2 DC motors and their speed.
+This project is visioned to provide a backup radio tower when all fails during any natural disaster where it can be used to communicate with people remotely using this network. Also can control various types of electrical devices by triggering them by ON and OFF and Also can control the Speed of 12V DC Motor using L293D Motor Driver we can control upto 2 DC motors and their speed.
 
 They can be controlled via the Chat System by sending a particular keyword to activate the device.
 
